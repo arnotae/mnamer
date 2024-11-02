@@ -1,10 +1,15 @@
-FROM python:alpine
+FROM python:3.10-slim
 ARG MNAMER_VERSION=2.5.5
 ARG UID=1000
 ARG GID=1000
-RUN addgroup mnamer -g $GID
-RUN adduser mnamer -u $UID -G mnamer --disabled-password
+RUN addgroup mnamer --gid $GID
+RUN adduser mnamer --uid $UID --gid $GID --disabled-password
 USER mnamer
-RUN pip3 install --no-cache-dir --upgrade pip mnamer==${MNAMER_VERSION}
+
+COPY requirements.txt ./
+RUN pip install --no-cache-dir --upgrade -r requirements.txt
+
+COPY ./mnamer ./mnamer
+
 ENTRYPOINT ["python", "-m", "mnamer"]
 CMD ["--batch", "/mnt"]
