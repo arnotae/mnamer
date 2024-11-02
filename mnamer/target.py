@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import datetime as dt
+import re
 from os import path
 from pathlib import Path
 from shutil import move
@@ -100,6 +101,8 @@ class Target:
         if self.directory:
             dir_head_ = format(self.metadata, str(self.directory))
             dir_head_ = str_sanitize(dir_head_)
+            dir_head_ = filename_replace(dir_head_, self._settings.replace_after)
+            dir_head_ = re.sub(r'(\w)-', r'\1 -', dir_head_)
             dir_head = Path(dir_head_)
         else:
             dir_head = self.source.parent
@@ -111,6 +114,7 @@ class Target:
         if self._settings.lower:
             filename = filename.lower()
         filename = str_sanitize(filename)
+        filename = re.sub(r'(\w)-', r'\1 -', filename)
         directory = Path(dir_head, dir_tail)
         return Path(directory, filename)
 
@@ -178,6 +182,10 @@ class Target:
             pass
         if isinstance(self.metadata, MetadataMovie):
             self.metadata.name = path_data.get("title")
+            if path_data.get("part"):
+                self.metadata.name = f"{self.metadata.name} part {path_data.get('part')}"
+            if path_data.get("alternative_title"):
+                self.metadata.name = f"{self.metadata.name} {path_data.get('alternative_title')}"
             self.metadata.year = path_data.get("year")
         elif isinstance(self.metadata, MetadataEpisode):
             self.metadata.date = path_data.get("date")

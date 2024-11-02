@@ -318,7 +318,7 @@ def str_sanitize(filename: str) -> str:
         container = container_prefix + container
     base = re.sub(r"\s+", " ", base)
     drive, tail = splitdrive(base)
-    tail = re.sub(r'[<>:"|?*&%=+@#`^]', "", tail)
+    tail = re.sub(r'[<>"|?*&%=+@#`^]', "", tail)
     return drive + tail.strip("-., ") + container
 
 
@@ -469,7 +469,7 @@ def str_title_case(s: str) -> str:
             prev_char = None if is_start else string_lower[pos - 1]  # type: ignore
             is_left_partitioned = is_start or prev_char in partition_chars  # type: ignore
             word_length = len(exception)
-            ends = pos + word_length == string_length
+            ends = pos + word_length >= string_length
             next_char = "" if ends else string_lower[pos + word_length]
             is_right_partitioned = ends or next_char in partition_chars
             if is_left_partitioned and is_right_partitioned:
