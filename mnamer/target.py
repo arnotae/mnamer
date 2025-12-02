@@ -184,7 +184,9 @@ class Target:
             self.metadata.name = path_data.get("title")
             if path_data.get("part"):
                 self.metadata.name = f"{self.metadata.name} part {path_data.get('part')}"
-            if path_data.get("alternative_title"):
+            if path_data.get("alternative_title") \
+                and "multi" not in path_data.get('alternative_title', '').lower() \
+                and "vf2" not in path_data.get('alternative_title', '').lower():
                 self.metadata.name = f"{self.metadata.name} {path_data.get('alternative_title')}"
             self.metadata.year = path_data.get("year")
         elif isinstance(self.metadata, MetadataEpisode):
