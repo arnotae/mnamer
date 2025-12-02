@@ -1,15 +1,21 @@
-FROM python:3.10-slim
-ARG MNAMER_VERSION=2.5.5
+FROM python:alpine
 ARG UID=1000
 ARG GID=1000
-RUN addgroup mnamer --gid $GID
-RUN adduser mnamer --uid $UID --gid $GID --disabled-password
-USER mnamer
+RUN addgroup mnamer -g $GID
+RUN adduser mnamer -u $UID -G mnamer --disabled-password
 
-COPY requirements.txt ./
-RUN pip install --no-cache-dir --upgrade -r requirements.txt
+WORKDIR /app
 
+# Copy uv from official image
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
+
+COPY pyproject.toml ./
 COPY ./mnamer ./mnamer
+
+# Install the package into system Python
+RUN uv pip install --system .
+
+USER mnamer
 
 ENTRYPOINT ["python", "-m", "mnamer"]
 CMD ["--batch", "/mnt"]

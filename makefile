@@ -36,4 +36,3 @@ demo: clean-demo
         "Florence Foresti - Boys Boys Boys (2024).mkv" \
         "Joker.Folie.a.Deux.2024.MULTi.VF2.1080p.WEB.H265-FW.mkv" \
         "Thank.You.Next.S01E04.MULTi.1080p.NF.WEB.x264-ONLYMOViE.mkv"
-
